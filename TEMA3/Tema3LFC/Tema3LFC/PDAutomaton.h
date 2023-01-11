@@ -7,20 +7,21 @@
 
 class PDAutomaton
 {
-	std::unordered_set<char> m_stari;
-	std::unordered_set<char> m_alfabet;
-	std::unordered_set<char> m_stariStiva;
-	std::vector<std::pair<std::tuple<char, char, char>, std::pair<char, std::string>>> m_tranzitii;
-	char m_stareInitiala;
-	char m_stareInitialaPD;
-	char m_nullcharacter;
-	std::unordered_set<char> m_stariFinale;
-	std::stack<char> m_stiva;
+	std::unordered_set<char> m_stari; //starile automatului(o sa fie doar q) 
+	std::unordered_set<char> m_alfabet; //alfabetul automatului
+	std::unordered_set<char> m_stariStiva; //starile care o sa fie in stiva
+	std::vector<std::pair<std::tuple<char, char, char>, std::pair<char, std::string>>> m_tranzitii; //tranzitiile
+	char m_stareInitiala; //starea initiala
+	char m_stareInitialaPD; //starea initiala din stiva
+	char m_nullcharacter; //caracterul null (care sterge din stiva)
+	std::unordered_set<char> m_stariFinale; //nu avem stari finale
+	std::stack<char> m_stiva; //stiva automatului
 
 public:
 	bool isDeterministic();
 	friend std::ostream& operator<<(std::ostream& out, const PDAutomaton& PDAutomaton);
 
+	//Setteri
 	void SetStari(const std::unordered_set<char>& stari);
 	void SetAlfabet(const std::unordered_set<char>& alfabet);
 	void SetTranzitii(const std::vector<std::pair<std::tuple<char, char, char>, std::pair<char, std::string>>>& tranzitii);

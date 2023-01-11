@@ -13,6 +13,7 @@ class Grammar
 	char m_startSymbol;
 	std::vector < std::pair<std::string, std::string>> m_productii;
 
+	//reguli pt verificare daca e gramatica valida
 	bool verifyRule1();
 	bool verifyRule2();
 	bool verifyRule3();
@@ -24,17 +25,26 @@ public:
 	bool verifyGrammar();
 	std::string generateWord();
 	bool isRegulated();
+	//verificare gramatica IDC
 	bool isIDC();
+	//simplificare fara elemente care nu genereaza elemente din VT(terminale)
 	void simplify1();
+	//simplificare fara elemente inaccesibile
 	void simplify2();
+	//simplificare fara redenumiri
 	void simplify3();
+
 	void ChomskyNormalForm();
 	void GreibachNormalForm();
 
 	friend bool operator<(const std::pair<std::string, std::string>& productie1, const std::pair<std::string, std::string>& productie2);
 	friend std::ostream& operator<<(std::ostream& out, const Grammar& grammar);
+	//sortarea gramaticii in functie de neterminalul din dreapta
 	void sortGrammar();
+	//ia neterminalul cel mai mare ca sa adauge neterminale in continuare
 	char getMaxNeterminal();
+
+	//getters
 	const std::unordered_set<char> GetTerminale()const;
 	const std::unordered_set<char> GetNeterminale()const;
 	const char GetStartSymbol()const;
