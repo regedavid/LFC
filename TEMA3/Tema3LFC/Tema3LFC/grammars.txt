@@ -9,3 +9,22 @@ A cAaa
 A caa
 B bB
 B b
+
+
+
+
+S
+5
+S A B C D
+3
+a b c
+9
+S AB
+S AD
+S a
+A AD
+A a
+B SC
+C CD
+C c
+D b
