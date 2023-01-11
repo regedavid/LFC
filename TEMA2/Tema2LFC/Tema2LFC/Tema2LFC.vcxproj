@@ -127,6 +127,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="formaPoloneza.cpp" />
+    <ClCompile Include="formaPoloneza.h" />
     <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <ItemGroup>

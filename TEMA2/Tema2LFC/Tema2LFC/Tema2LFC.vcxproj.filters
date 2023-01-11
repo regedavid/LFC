@@ -18,6 +18,12 @@
     <ClCompile Include="Main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="formaPoloneza.h">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="formaPoloneza.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="date.in">

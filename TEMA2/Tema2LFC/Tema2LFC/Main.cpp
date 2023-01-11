@@ -3,6 +3,7 @@
 #include <fstream>
 #include <string>
 #include <vector>
+#include "formaPoloneza.h"
 
 std::vector<std::string> tokenizare(std::string expresie);
 std::vector<std::string> forma_poloneza(std::vector<std::string> token);
@@ -22,14 +23,8 @@ int main()
 	std::ifstream in("date.in");
 	std::string expresie;
 	getline(in, expresie);
-	adaugareInmultire(expresie);
-
-	std::vector<std::string>token = tokenizare(expresie);
-
-	std::vector<std::string> fp = forma_poloneza(token);
-	for (auto x : fp)
-		std::cout << x;
-
+	formaPoloneza f;
+	std::vector<std::string>fp = f(expresie);
 }
 
 void adaugareInmultire(std::string& expresie)
