@@ -66,21 +66,82 @@ int main()
     PDAutomaton pdautomaton;
     std::ifstream fin("Text.txt");
     grammar.readGrammar(fin);
-    //grammar.simplify1();
-    //grammar.simplify2();
-    //grammar.simplify3();
-    //grammar.ChomskyNormalForm();
-    
-    grammar.sortGrammar();
-    //grammar.GreibachNormalForm();
-    std::cout << grammar;
-    if (grammar.isIDC()) {
-        std::cout << "idc";
-    }
-    else std::cout << "notIDC";
-   //std::cout << grammar;
     GrammarToPDAutomaton(grammar, pdautomaton);
-    std::cout << std::endl << pdautomaton;
+    std::cout << pdautomaton << std::endl;
+    if (grammar.verifyGrammar() && grammar.isIDC()) 
+    {
+        std::cout << "The grammar is valid and IDC! :)" << std::endl<< std::endl;
+        while (true) {
+            std::cout << "1. Display grammar" << std::endl;
+            std::cout << "2. Generate word in grammar" << std::endl;
+            std::cout << "3. Display simplified grammar" << std::endl;
+            std::cout << "4. Display grammar in FNG" << std::endl;
+            std::cout << "5. Generate a word in grammar and verify if it is accepted in automaton" << std::endl;
+            std::cout << "6. Verify if a input word is accepted by the automaton" << std::endl;
+            std::cout << "7. Exit" << std::endl;
+
+            int choice;
+            std::cin >> choice;
+
+            switch (choice) {
+            case 1:
+                std::cout << "You choosed to display grammar:" << std::endl;
+                std::cout<<grammar;
+                break;
+            case 2:
+                std::cout << "You choosed to generate word in grammar:" << std::endl;
+                std::cout << "Generated word: " << grammar.generateWord() << std::endl;
+                break;
+            case 3:
+                std::cout << "You choosed to display simplified grammar:" << std::endl;
+                break;
+            case 4:
+                std::cout << "You choosed to display grammar in FNG:" << std::endl;
+
+                break;
+            case 5:
+            {
+                std::cout << "You choosed to generate a word in grammar and verify if it is accepted in automaton"<< std::endl;
+                std::string word = grammar.generateWord();
+                std::cout << "Generated word: " << word << std::endl;
+                if (pdautomaton.Checkword(word))
+                {
+                    std::cout << "The word is accepted by the automaton." << std::endl;
+                }
+                else 
+                {
+                    std::cout << "The word is not accepted by the automaton." << std::endl;
+                }
+                break;
+            }
+            case 6:
+            {
+                std::cout << "You choosed to verify if a input word is accepted by the automaton" << std::endl;
+                std::string word;
+                std::cout << "Enter a word to check: ";
+                std::cin >> word;
+                if (pdautomaton.Checkword(word)) {
+                    std::cout << "The word is accepted by the automaton." << std::endl;
+                }
+                else {
+                    std::cout << "The word is not accepted by the automaton." << std::endl;
+                }
+                break;
+            }
+            case 7:
+                return 0;
+            default:
+                std::cout << "Invalid choice. Please try again." << std::endl;
+            }
+        }
+        return 0;
+    }
+    else
+    {
+        std::cout << "The grammar is not valid or IDC." << std::endl;
+            return 0;
+    }
+    
 }
 
 

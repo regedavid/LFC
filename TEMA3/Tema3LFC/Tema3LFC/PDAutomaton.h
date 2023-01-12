@@ -20,7 +20,7 @@ class PDAutomaton
 public:
 	bool isDeterministic();
 	friend std::ostream& operator<<(std::ostream& out, const PDAutomaton& PDAutomaton);
-
+	bool Checkword(std::string word);
 	//Setteri
 	void SetStari(const std::unordered_set<char>& stari);
 	void SetAlfabet(const std::unordered_set<char>& alfabet);
