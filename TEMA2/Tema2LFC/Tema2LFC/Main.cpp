@@ -1,4 +1,5 @@
 #include "formaPoloneza.h"
+#include <regex>
 
 // calculele tre sa faca toate nebuniile cu automatonul in fct de forma poloneza
 float calcul_forma_poloneza(std::vector<std::string> fp);
@@ -12,6 +13,10 @@ int main()
 	std::ifstream in("date.in");
 	std::string expresie;
 	getline(in, expresie);
+	if (verificare_expresie(expresie) == 1)
+		std::cout << "ok" << std::endl;
+	else
+		std::cout << "nu ok" << std::endl;
 	formaPoloneza f;
 	std::vector<std::string>fp = f(expresie);
 }
@@ -57,26 +62,30 @@ float calcul(float x, float y, char element)
 
 int verificare_expresie(std::string expresie)
 {
-	char op_cu_paranteze[20] = { " .()^*/-+" }, prev = ' ';
-	char op_fara[20] = { "^*-+" };
-	std::stack<char>paranteze;
+	std::regex find("([*]+)");
+	std::string replace("*");
+	expresie = std::regex_replace(expresie, find, replace);
+
+	std::string op_cu_paranteze(" ().*|");
+	std::string op_fara(".*|");
+	std::stack<char> paranteze;
+	char prev(' ');
 	for (char c : expresie)
 	{
-		if (isalnum(c) == 0 && strchr(op_cu_paranteze, c) == 0)
+		if (isalpha(c)==0 && op_cu_paranteze.find(c)==std::string::npos)
 		{
 			std::cerr << "Caractere nepermise" << std::endl;
 			return 0;
 		}
-
-		if (strchr(op_fara, c) != 0 && strchr(op_fara, prev) != 0)
+		if (op_fara.find(c) != std::string::npos && (op_fara.find(prev) != std::string::npos || prev=='('))
 		{
-			std::cerr << "Prea multi operatori";
+			std::cerr << "Prea multi operatori" << std::endl;
 			return 0;
 		}
 		else
-			if (strchr(op_fara, c) != 0)
+			if (op_cu_paranteze.find(c) != std::string::npos)
 				prev = c;
-		if (isalnum(c) != 0)
+		if (isalpha(c) != 0)
 			prev = ' ';
 
 		if (c == '(')
@@ -88,13 +97,14 @@ int verificare_expresie(std::string expresie)
 		if (paranteze.size() != 0)
 			if (c == ')' && paranteze.top() != '(')
 			{
-				std::cerr << "Parantezare gresita";
+				std::cerr << "Parantezare gresita"<<std::endl;
 				return 0;
 			}
 	}
+
 	if (paranteze.size() != 0)
 	{
-		std::cerr << "Parantezare gresita";
+		std::cerr << "Parantezare gresita" << std::endl;
 		return 0;
 	}
 	else
