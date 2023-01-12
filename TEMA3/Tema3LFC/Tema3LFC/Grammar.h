@@ -21,6 +21,8 @@ class Grammar
 	bool verifyRule5();
 public:
 	Grammar() = default;
+	Grammar& operator=(const Grammar& other);
+
 	void readGrammar(std::ifstream& inputfile);
 	bool verifyGrammar();
 	std::string generateWord();

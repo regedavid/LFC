@@ -25,11 +25,15 @@ bool PDAutomaton::Checkword(std::string word)
 	for (int i = 0; i < word.length(); i++) {
 		char currentChar = word[i];
 		bool foundTransition = false;
+		std::cout << currentChar << " " << m_stiva.top() << std::endl;
 		for (int j = 0; j < m_tranzitii.size(); j++) {
 			if (currentState ==std::get<0>(m_tranzitii[j].first) && currentChar == std::get<1>(m_tranzitii[j].first) && m_stiva.top() == std::get<2>(m_tranzitii[j].first)) {
 				currentState = m_tranzitii[j].second.first;
 				std::string stackString = m_tranzitii[j].second.second;
-				for (int k = 0; k < stackString.length(); k++) {
+				if (stackString[0] != '~') {
+					m_stiva.pop();
+				}
+				for (int k = stackString.length() - 1; k >= 0; k--) {
 					if (stackString[k] == '~') {
 						m_stiva.pop();
 					}

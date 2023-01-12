@@ -60,13 +60,20 @@ void GrammarToPDAutomaton(Grammar& grammar, PDAutomaton& automaton) {
     }
     automaton.SetTranzitii(tranzitii);
 }
+
 int main()
 {
     Grammar grammar;
+    Grammar grammarFNG;
+    Grammar simplified;
     PDAutomaton pdautomaton;
-    std::ifstream fin("Text.txt");
+    std::ifstream fin("text.txt");
     grammar.readGrammar(fin);
-    GrammarToPDAutomaton(grammar, pdautomaton);
+    simplified = grammar;
+    /*grammarFNG = grammar;
+    grammarFNG.ChomskyNormalForm();
+    grammarFNG.GreibachNormalForm();*/
+    GrammarToPDAutomaton(grammar/*grammarFNG ar trebui*/, pdautomaton);
     std::cout << pdautomaton << std::endl;
     if (grammar.verifyGrammar() && grammar.isIDC()) 
     {
@@ -94,10 +101,14 @@ int main()
                 break;
             case 3:
                 std::cout << "You choosed to display simplified grammar:" << std::endl;
+                simplified.simplify1();
+                simplified.simplify2();
+                simplified.simplify3();
+                std::cout << simplified;
                 break;
             case 4:
                 std::cout << "You choosed to display grammar in FNG:" << std::endl;
-
+                std::cout << grammarFNG;
                 break;
             case 5:
             {

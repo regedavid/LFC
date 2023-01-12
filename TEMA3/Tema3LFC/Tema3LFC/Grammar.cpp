@@ -87,6 +87,15 @@ bool Grammar::verifyRule5()
 	return true;
 }
 
+Grammar& Grammar::operator=(const Grammar& other)
+{
+	m_neterminale = other.m_neterminale;
+	m_terminale = other.m_terminale;
+	m_startSymbol = other.m_startSymbol;
+	m_productii = other.m_productii;
+	return *this;
+}
+
 void Grammar::readGrammar(std::ifstream& inputfile)
 {
 	int nrTerminale, nrNeterminale, nrProductii;
