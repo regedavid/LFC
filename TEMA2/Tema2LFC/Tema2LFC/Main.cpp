@@ -1,14 +1,4 @@
-#include <iostream>
-#include <stack>
-#include <fstream>
-#include <string>
-#include <vector>
 #include "formaPoloneza.h"
-
-std::vector<std::string> tokenizare(std::string expresie);
-std::vector<std::string> forma_poloneza(std::vector<std::string> token);
-int precedenta(char element);
-void adaugareInmultire(std::string& expresie);
 
 // calculele tre sa faca toate nebuniile cu automatonul in fct de forma poloneza
 float calcul_forma_poloneza(std::vector<std::string> fp);
@@ -17,7 +7,6 @@ float calcul(float x, float y, char element);
 // sa verificat si moficat expresia data sa fie calumea
 int verificare_expresie(std::string expresie);
 
-
 int main()
 {
 	std::ifstream in("date.in");
@@ -25,105 +14,6 @@ int main()
 	getline(in, expresie);
 	formaPoloneza f;
 	std::vector<std::string>fp = f(expresie);
-}
-
-void adaugareInmultire(std::string& expresie)
-{
-	char before = { '(' };
-	std::string after = { ")*" };
-	std::string all = { "()|*" };
-	char first = expresie[0];
-	char second;
-	for (int i = 1; i < expresie.size(); i++)
-	{
-		second = expresie[i];
-		if (all.find(first) == std::string::npos && all.find(second) == std::string::npos ||
-			after.find(first) != std::string::npos && all.find(second) == std::string::npos ||
-			all.find(first) == std::string::npos && before == second)
-		{
-			expresie.insert(i, ".");
-			i++;
-		}
-		first = second;
-	}
-}
-
-std::vector<std::string> tokenizare(std::string expresie)
-{
-	std::vector<std::string> token;
-	std::string temp = "", temp2 = "";
-	std::string op = { "()*|." };
-	for (char c : expresie)
-	{
-		if (op.find(c) == std::string::npos)
-		{
-			temp += c;
-		}
-		if (op.find(c) != std::string::npos)
-		{
-			temp2 = c;
-			if (temp != "")
-				token.push_back(temp);
-			token.push_back(temp2);
-			temp2 = "";	temp = "";
-		}
-	}
-	token.push_back(temp);
-	return token;
-}
-
-std::vector<std::string> forma_poloneza(std::vector<std::string> token)
-{
-	std::stack<std::string> op;
-	std::vector<std::string> fp;
-	char op_calcul[10] = { "()*|." };
-	for (std::string element : token)
-	{
-		if (isalnum(element[0]) != 0)
-			fp.push_back(element);
-		else
-			if (element[0] == '(')
-				op.push(element);
-			else
-				if (element[0] == ')')
-				{
-					while (element != "" && op.top()[0] != '(')
-					{
-						fp.push_back(op.top());
-						op.pop();
-					}
-					op.pop();
-				}
-				else
-				{
-					while (op.size() != 0 && precedenta(element[0]) <= precedenta(op.top()[0]))
-					{
-						fp.push_back(op.top());
-						op.pop();
-					}
-					op.push(element);
-				}
-
-
-	}
-	while (op.size() != 0)
-	{
-		fp.push_back(op.top());
-		op.pop();
-	}
-	return fp;
-}
-
-int precedenta(char element)
-{
-	if (element == '(')
-		return 0;
-	if (element == '|')
-		return 1;
-	if (element == '.')
-		return 2;
-	if (element == '*')
-		return 3;
 }
 
 float calcul_forma_poloneza(std::vector<std::string> fp)
