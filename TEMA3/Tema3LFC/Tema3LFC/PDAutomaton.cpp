@@ -18,6 +18,41 @@ bool PDAutomaton::isDeterministic()
 	return true;
 }
 
+bool PDAutomaton::Checkword(std::string word)
+{
+	char currentState = m_stareInitiala;
+	m_stiva.push(m_stareInitialaPD);
+	for (int i = 0; i < word.length(); i++) {
+		char currentChar = word[i];
+		bool foundTransition = false;
+		for (int j = 0; j < m_tranzitii.size(); j++) {
+			if (currentState ==std::get<0>(m_tranzitii[j].first) && currentChar == std::get<1>(m_tranzitii[j].first) && m_stiva.top() == std::get<2>(m_tranzitii[j].first)) {
+				currentState = m_tranzitii[j].second.first;
+				std::string stackString = m_tranzitii[j].second.second;
+				for (int k = 0; k < stackString.length(); k++) {
+					if (stackString[k] == '~') {
+						m_stiva.pop();
+					}
+					else {
+						m_stiva.push(stackString[k]);
+					}
+				}
+				foundTransition = true;
+				break;
+			}
+		}
+		if (!foundTransition) {
+			return false;
+		}
+	}
+	if (m_stariFinale.find(currentState) != m_stariFinale.end()) {
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
 void PDAutomaton::SetStari(const std::unordered_set<char>& stari)
 {
 	m_stari = stari;
