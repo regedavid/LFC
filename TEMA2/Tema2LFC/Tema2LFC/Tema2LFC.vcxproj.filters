@@ -24,10 +24,18 @@
     <ClCompile Include="formaPoloneza.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="AFN.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="date.in">
       <Filter>Resource Files</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="AFN.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
