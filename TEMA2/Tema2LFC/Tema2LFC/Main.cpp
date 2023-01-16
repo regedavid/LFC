@@ -216,7 +216,7 @@ int main()
 	}
 	else
 	{
-		std::cout << "The grammar is not valid or IDC." << std::endl;
+		std::cout << "Expresia nu este valida." << std::endl;
 		return 0;
 	}
 	
