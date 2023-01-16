@@ -223,6 +223,13 @@ int main()
 		std::cout << "The grammar is not valid or IDC." << std::endl;
 		return 0;
 	}
+	for (auto& it : fp) {
+		std::cout << it;
+	}
+	std::cout << std::endl;
+	AFN result = CreateAFNFromPolishForm(fp);
+	std::cout << result;
+
 }
 
 float calcul_forma_poloneza(std::vector<std::string> fp)
