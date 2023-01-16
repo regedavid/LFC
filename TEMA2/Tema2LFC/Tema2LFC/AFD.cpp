@@ -4,8 +4,6 @@ void AFD::TransformToAFD(AFN& afn)
 {
     // Get the epsilon closure of the initial state of the AFN
     std::unordered_set<char> epsilonClosure = afn.EpsilonClosure(afn.GetStareInitiala());
-
-<<<<<<< HEAD
     // Set the initial state of the AFD to be the epsilon closure
     m_stareInitiala = epsilonClosure;
 
