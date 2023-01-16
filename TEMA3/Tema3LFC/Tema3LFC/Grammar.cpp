@@ -277,6 +277,7 @@ void Grammar::simplify1()
 		}
 		index++;
 	}
+	m_neterminale = stari;
 }
 
 void Grammar::simplify2()
@@ -323,6 +324,7 @@ void Grammar::simplify2()
 		}
 		index++;
 	}
+	m_neterminale = stari;
 }
 
 void Grammar::simplify3()
