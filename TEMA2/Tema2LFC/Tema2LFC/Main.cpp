@@ -3,11 +3,6 @@
 #include <iostream>
 #include <regex>
 
-// calculele tre sa faca toate nebuniile cu automatonul in fct de forma poloneza
-float calcul_forma_poloneza(std::vector<std::string> fp);
-float calcul(float x, float y, char element);
-
-// sa verificat si moficat expresia data sa fie calumea
 int verificare_expresie(std::string expresie);
 
 AFD createAFD(const char symbol, const char contor) {
@@ -226,45 +221,6 @@ int main()
 	}
 	
 
-}
-
-float calcul_forma_poloneza(std::vector<std::string> fp)
-{
-	std::stack<float> num;
-	//o sa vina un stack de automate presupun
-
-	for (std::string element : fp)
-	{
-		if (isalnum(element[0]) != 0)
-		{
-			float val = std::stof(element);
-			num.push(val);
-		}
-		else
-		{
-			float y = num.top();
-			num.pop();
-			float x = num.top();
-			num.pop();
-			float rez = calcul(x, y, element[0]);
-			num.push(rez);
-		}
-	}
-	return num.top();
-}
-
-float calcul(float x, float y, char element)
-{
-	if (element == '-')
-		return x - y;
-	if (element == '+')
-		return x + y;
-	if (element == '/')
-		return x / y;
-	if (element == '*')
-		return x * y;
-	if (element == '^')
-		return pow(x, y);
 }
 
 int verificare_expresie(std::string expresie)
