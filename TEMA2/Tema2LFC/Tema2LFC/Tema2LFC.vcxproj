@@ -127,7 +127,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="AFD.cpp" />
+    <ClCompile Include="AFD2.cpp" />
     <ClCompile Include="AFN.cpp" />
     <ClCompile Include="formaPoloneza.cpp" />
     <ClCompile Include="formaPoloneza.h" />
