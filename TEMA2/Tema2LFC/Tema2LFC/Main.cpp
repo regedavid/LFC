@@ -181,6 +181,7 @@ int main()
 		}
 		std::cout << std::endl;
 		AFN result = CreateAFNFromPolishForm(fp);
+
 		std::cout << "Expresia este valida :)" << std::endl << std::endl;
 		while (true)
 		{
@@ -223,12 +224,7 @@ int main()
 		std::cout << "The grammar is not valid or IDC." << std::endl;
 		return 0;
 	}
-	for (auto& it : fp) {
-		std::cout << it;
-	}
-	std::cout << std::endl;
-	AFN result = CreateAFNFromPolishForm(fp);
-	std::cout << result;
+	
 
 }
 
