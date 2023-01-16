@@ -25,34 +25,44 @@ bool PDAutomaton::Checkword(std::string word)
 	for (int i = 0; i < word.length(); i++) {
 		char currentChar = word[i];
 		bool foundTransition = false;
-		std::cout << currentChar << " " << m_stiva.top() << std::endl;
+		std::vector<int> validTransitions;
 		for (int j = 0; j < m_tranzitii.size(); j++) {
-			if (currentState ==std::get<0>(m_tranzitii[j].first) && currentChar == std::get<1>(m_tranzitii[j].first) && m_stiva.top() == std::get<2>(m_tranzitii[j].first)) {
-				currentState = m_tranzitii[j].second.first;
-				std::string stackString = m_tranzitii[j].second.second;
-				if (stackString[0] != '~') {
-					m_stiva.pop();
-				}
-				for (int k = stackString.length() - 1; k >= 0; k--) {
-					if (stackString[k] == '~') {
-						m_stiva.pop();
-					}
-					else {
-						m_stiva.push(stackString[k]);
-					}
-				}
+			if (currentState == std::get<0>(m_tranzitii[j].first) && currentChar == std::get<1>(m_tranzitii[j].first) && m_stiva.top() == std::get<2>(m_tranzitii[j].first)) {
+				validTransitions.push_back(j);
 				foundTransition = true;
-				break;
 			}
 		}
 		if (!foundTransition) {
+			while (!m_stiva.empty())
+			{
+				m_stiva.pop();
+			}
 			return false;
+		}
+		int chosenTransition = validTransitions[rand() % validTransitions.size()];
+		currentState = m_tranzitii[chosenTransition].second.first;
+		std::string stackString = m_tranzitii[chosenTransition].second.second;
+		if (stackString[0] != '~') {
+			m_stiva.pop();
+		}
+		for (int k = stackString.length() - 1; k >= 0; k--) {
+			if (stackString[k] != '~') {
+				m_stiva.push(stackString[k]);
+			}
 		}
 	}
 	if (m_stariFinale.find(currentState) != m_stariFinale.end()) {
+		while (!m_stiva.empty())
+		{
+			m_stiva.pop();
+		}
 		return true;
 	}
 	else {
+		while (!m_stiva.empty())
+		{
+			m_stiva.pop();
+		}
 		return false;
 	}
 }
