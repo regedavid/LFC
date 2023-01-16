@@ -2,7 +2,7 @@
 #include <unordered_set>
 #include <iostream>
 
-class AFN
+class AFD
 {
 	std::unordered_set<char> m_stari; //starile automatului(o sa fie doar q) 
 	std::unordered_set<char> m_alfabet; //alfabetul automatului
@@ -12,7 +12,7 @@ class AFN
 	std::unordered_set<char> m_stariFinale;
 
 public:
-	friend std::ostream& operator<<(std::ostream& out, const AFN& finiteAutomaton);
+	friend std::ostream& operator<<(std::ostream& out, const AFD& finiteAutomaton);
 	void inchidereKleene(char contor);
 
 	//setters

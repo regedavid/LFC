@@ -127,7 +127,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="AFN.cpp" />
+    <ClCompile Include="AFD.cpp" />
     <ClCompile Include="formaPoloneza.cpp" />
     <ClCompile Include="formaPoloneza.h" />
     <ClCompile Include="Main.cpp" />
@@ -136,7 +136,7 @@
     <None Include="date.in" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="AFN.h" />
+    <ClInclude Include="AFD.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

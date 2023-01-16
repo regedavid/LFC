@@ -1,6 +1,6 @@
-#include "AFN.h"
+#include "AFD.h"
 
-void AFN::inchidereKleene(char contor)
+void AFD::inchidereKleene(char contor)
 {
 	m_tranzitii.push_back(std::make_pair(std::make_pair(*m_stariFinale.begin(), '~'),m_stareInitiala));
 	m_tranzitii.push_back(std::make_pair(std::make_pair(contor, '~'), m_stareInitiala));
@@ -14,57 +14,57 @@ void AFN::inchidereKleene(char contor)
 	m_stari.insert(contor + 1);
 }
 
-void AFN::SetStari(const std::unordered_set<char>& stari)
+void AFD::SetStari(const std::unordered_set<char>& stari)
 {
 	m_stari = stari;
 }
 
-void AFN::SetAlfabet(const std::unordered_set<char>& alfabet)
+void AFD::SetAlfabet(const std::unordered_set<char>& alfabet)
 {
 	m_alfabet = alfabet;
 }
 
-void AFN::SetTranzitii(const std::vector<std::pair<std::pair<char, char>, char>>& tranzitii)
+void AFD::SetTranzitii(const std::vector<std::pair<std::pair<char, char>, char>>& tranzitii)
 {
 	m_tranzitii = tranzitii;
 }
 
-void AFN::SetStareInitiala(const char& stareInitiala)
+void AFD::SetStareInitiala(const char& stareInitiala)
 {
 	m_stareInitiala = stareInitiala;
 }
 
-void AFN::SetStariFinale(const std::unordered_set<char>& stariFinale)
+void AFD::SetStariFinale(const std::unordered_set<char>& stariFinale)
 {
 	m_stariFinale = stariFinale;
 }
 
-std::unordered_set<char> AFN::GetStari() const
+std::unordered_set<char> AFD::GetStari() const
 {
 	return m_stari;
 }
 
-std::unordered_set<char> AFN::GetAlfabet() const
+std::unordered_set<char> AFD::GetAlfabet() const
 {
 	return m_alfabet;
 }
 
-std::vector<std::pair<std::pair<char, char>, char>> AFN::GetTranzitii() const
+std::vector<std::pair<std::pair<char, char>, char>> AFD::GetTranzitii() const
 {
 	return m_tranzitii;
 }
 
-char AFN::GetStareInitiala() const
+char AFD::GetStareInitiala() const
 {
 	return m_stareInitiala;
 }
 
-std::unordered_set<char> AFN::GetStariFinale() const
+std::unordered_set<char> AFD::GetStariFinale() const
 {
 	return m_stariFinale;
 }
 
-std::ostream& operator<<(std::ostream& out, const AFN& finiteAutomaton)
+std::ostream& operator<<(std::ostream& out, const AFD& finiteAutomaton)
 {
 	out << '(';
 	out << '{';
