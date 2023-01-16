@@ -181,6 +181,7 @@ int main()
 		}
 		std::cout << std::endl;
 		AFN result = CreateAFNFromPolishForm(fp);
+
 		std::cout << "Expresia este valida :)" << std::endl << std::endl;
 		while (true)
 		{
@@ -223,6 +224,8 @@ int main()
 		std::cout << "The grammar is not valid or IDC." << std::endl;
 		return 0;
 	}
+	
+
 }
 
 float calcul_forma_poloneza(std::vector<std::string> fp)

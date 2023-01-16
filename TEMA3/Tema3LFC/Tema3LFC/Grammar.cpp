@@ -449,11 +449,18 @@ void Grammar::GreibachNormalForm()
 {
 	char symbol = getMaxNeterminal() + 1;
 	std::unordered_set<char> addedSymbols;
+	std::unordered_set<char> step1Neterminale;
+	for (auto& it : m_neterminale) {
+		if (it != m_startSymbol)
+			step1Neterminale.insert(it);
+	}
+	//pas 1
 	for (int index = 0; index < m_productii.size(); index++) {
-		if (m_productii[index].first[0] != m_startSymbol && m_productii[index].second.size() > 1) {
-			if (m_productii[index].first[0] == m_productii[index].second[0]) { //recursivitate stanga
+		if (step1Neterminale.find(m_productii[index].first[0]) != step1Neterminale.end() && m_productii[index].second.size() > 1 && (m_productii[index].first[0] >= m_productii[index].second[0] || m_productii[index].second[0] == m_startSymbol)) { //daca nu e in FNG sau e cu S la inceput si face parte din step1Neterminale
+
+			if (m_productii[index].first[0] == m_productii[index].second[0]) { //recursivitate stanga se aplica LEMA2
 				for (int index2 = index; index2 < m_productii.size(); index2++) { //pentru toate productiile cu acelasi simbol in stanga
-					if (m_productii[index2].first[0] == m_productii[index2].second[0]) {
+					if (m_productii[index2].first[0] == m_productii[index2].second[0] && m_productii[index].first[0] == m_productii[index2].first[0]) {
 						bool applicable = false;
 						std::string terminal;
 						for (auto& it : m_productii) {
@@ -466,19 +473,56 @@ void Grammar::GreibachNormalForm()
 						if (applicable == true) {
 							terminal += symbol;
 							std::string symbolString(1, symbol);
-							std::string substr = m_productii[index2].second.substr(1, m_productii[index].second.size() - 1);
+							std::string substr = m_productii[index2].second.substr(1, m_productii[index2].second.size() - 1);
 							m_productii.push_back(std::make_pair(m_productii[index2].first, terminal));
 							m_productii.push_back(std::make_pair(symbolString, substr + symbol));
 							m_productii.push_back(std::make_pair(symbolString, substr));
-						
+
 
 						}
 					}
 				}
-			//else {
+				addedSymbols.insert(symbol);
+				symbol++;
+				m_productii.erase(m_productii.begin() + index);
+				index--;
+			}
+			else {//se aplica LEMA 1
+				std::string substr = m_productii[index].second.substr(1, m_productii[index].second.size() - 1);
+				char changed = m_productii[index].second[0];
+				std::string left(1, m_productii[index].first[0]);
+				m_productii.erase(m_productii.begin() + index);
+				index--;
 
-			//}
-			
+				for (auto& it : m_productii) {
+					if (it.first[0] == changed) {
+						std::string right = it.second;
+						right += substr;
+
+						m_productii.push_back(std::make_pair(left, right));
+					}
+				}
+
+			}
+
+		}
+	}
+	//pas2
+	for (int index = 0; index < m_productii.size(); index++) {
+		if ((addedSymbols.find(m_productii[index].first[0]) != addedSymbols.end() || m_productii[index].first[0] == m_startSymbol) && m_terminale.find(m_productii[index].second[0]) == m_terminale.end()) {
+			std::string substr = m_productii[index].second.substr(1, m_productii[index].second.size() - 1);
+			char changed = m_productii[index].second[0];
+			std::string left(1, m_productii[index].first[0]);
+			m_productii.erase(m_productii.begin() + index);
+			index--;
+
+			for (auto& it : m_productii) {
+				if (it.first[0] == changed) {
+					std::string right = it.second;
+					right += substr;
+
+					m_productii.push_back(std::make_pair(left, right));
+				}
 			}
 		}
 	}

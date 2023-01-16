@@ -80,13 +80,17 @@ std::ostream& operator<<(std::ostream& out, const AFN& finiteAutomaton)
 	
 
 	out << finiteAutomaton.m_stareInitiala;
+	out << ", ";
+	out << *finiteAutomaton.GetStariFinale().begin();
 	out << ')';
+
 	out << std::endl;
 	int index = 1;
 	for (auto& it : finiteAutomaton.m_tranzitii) {
 		out << "(" << index << ") ";
-		out << '(' << it.first.first << ',' << it.first.second << ") -> (" << it.second;
+		out << '(' << it.first.first << ',' << it.first.second << ") -> " << it.second;
 		out << std::endl;
+		index++;
 	}
 
 	return out;
