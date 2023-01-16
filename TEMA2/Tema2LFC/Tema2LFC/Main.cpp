@@ -172,16 +172,57 @@ int main()
 	std::string expresie;
 	getline(in, expresie);
 	if (verificare_expresie(expresie) == 1)
-		std::cout << "ok" << std::endl;
-	else
-		std::cout << "nu ok" << std::endl;
-	formaPoloneza f;
-	std::vector<std::string>fp = f(expresie);
-	for (auto& it : fp) {
-		std::cout << it;
+	{
+		formaPoloneza f;
+		std::vector<std::string>fp = f(expresie);
+		for (auto& it : fp)
+		{
+			std::cout << it;
+		}
+		std::cout << std::endl;
+		AFN result = CreateAFNFromPolishForm(fp);
+		std::cout << "Expresia este valida :)" << std::endl << std::endl;
+		while (true)
+		{
+			std::cout << "1. Afisarea automatului" << std::endl;
+			std::cout << "2. Afisarea inteligibila a expresiei regulate din fisier" << std::endl;
+			std::cout << "3. Verifcarea unui cuvânt în automat" << std::endl;
+			std::cout << "4. Exit" << std::endl;
+			int choice;
+			std::cin >> choice;
+			switch (choice)
+			{
+			case 1:
+			{
+				std::cout << "Afisarea automatului este:" << std::endl;
+				break;
+			}
+			case 2:
+			{
+				std::cout << "Afisarea inteligibila a expresiei regulate din fisier este:" << std::endl;
+				break;
+			}
+			case 3:
+			{
+				std::cout << "Ai ales sa verifici un cuvânt în automat" << std::endl;
+				std::string word;
+				std::cout << "Cuvantul de verificat este: ";
+				std::cin >> word;
+				break;
+			}
+			case 4:
+				return 0;
+			default:
+				std::cout << "Input gresit. Va rog reincercati." << std::endl;
+			}
+			return 0;
+		}
 	}
-	std::cout << std::endl;
-	AFN result = CreateAFNFromPolishForm(fp);
+	else
+	{
+		std::cout << "The grammar is not valid or IDC." << std::endl;
+		return 0;
+	}
 }
 
 float calcul_forma_poloneza(std::vector<std::string> fp)
