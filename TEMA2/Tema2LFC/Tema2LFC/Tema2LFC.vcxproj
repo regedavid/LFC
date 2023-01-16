@@ -128,6 +128,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AFD.cpp" />
+    <ClCompile Include="AFN.cpp" />
     <ClCompile Include="formaPoloneza.cpp" />
     <ClCompile Include="formaPoloneza.h" />
     <ClCompile Include="Main.cpp" />
@@ -137,6 +138,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AFD.h" />
+    <ClInclude Include="AFN.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
