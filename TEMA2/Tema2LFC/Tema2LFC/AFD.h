@@ -2,6 +2,7 @@
 #include <unordered_set>
 #include <iostream>
 #include"AFN.h"
+
 class AFD : public AFN
 {
     std::unordered_set<std::unordered_set<char>> m_stari;

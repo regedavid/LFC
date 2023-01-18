@@ -1,165 +1,13 @@
 #include "formaPoloneza.h"
-#include "AFD.h"
+#include "AFN.h"
 #include <iostream>
 #include <regex>
 
 int verificare_expresie(std::string expresie);
-
-AFD createAFD(const char symbol, const char contor) {
-	AFD result;
-	std::unordered_set<char> symbols;
-	symbols.insert(symbol);
-	result.SetAlfabet(symbols);
-
-	std::unordered_set<char> stari;
-	stari.insert(contor);
-	stari.insert(contor + 1);
-	result.SetStari(stari);
-
-	result.SetStareInitiala(contor);
-	std::unordered_set<char> stariFinale;
-	stariFinale.insert(contor + 1);
-	result.SetStariFinale(stariFinale);
-
-	std::vector<std::pair<std::pair<char, char>, char>> tranzitii;
-	tranzitii.push_back(std::make_pair(std::make_pair(contor, symbol), contor + 1));
-	result.SetTranzitii(tranzitii);
-
-	return result;
-}
-
-AFD Concatenare(const AFD& afd1, const AFD& afd2) {
-	AFD result;
-	result.SetStareInitiala(afd1.GetStareInitiala());
-	result.SetStariFinale(afd2.GetStariFinale());
-	char stareFinalaAFD1 = *(afd1.GetStariFinale().begin());
-	std::vector<std::pair<std::pair<char, char>, char>> tranzitii2;
-	std::vector<std::pair<std::pair<char, char>, char>> tranzitiiFinal;
-	for (auto& it : afd2.GetTranzitii()) {
-		tranzitii2.push_back(it);
-	}
-	for (auto& it : tranzitii2) {
-		if(it.first.first==afd2.GetStareInitiala()){
-			it.first.first = stareFinalaAFD1;
-		}
-	}
-	for (auto& it : afd1.GetTranzitii()) {
-		tranzitiiFinal.push_back(it);
-	}
-	for (auto& it : tranzitii2) {
-		tranzitiiFinal.push_back(it);
-	}
-	result.SetTranzitii(tranzitiiFinal);
-	std::unordered_set<char> stariAFD2;
-	std::unordered_set<char> stariFinal;
-	for (auto& it : afd2.GetStari()) {
-		if(it!= afd2.GetStareInitiala())
-		stariAFD2.insert(it);	
-	}
-	for (auto& it : afd1.GetStari()) {
-		stariFinal.insert(it);
-	}
-	for (auto& it : stariAFD2) {
-		stariFinal.insert(it);
-	}
-	result.SetStari(stariFinal);
-	std::unordered_set<char> alfabet;
-	for (auto& it : afd1.GetAlfabet()) {
-		alfabet.insert(it);
-	}
-	for (auto& it : afd2.GetAlfabet()) {
-		alfabet.insert(it);
-	}
-	result.SetAlfabet(alfabet);
-	return result;
-}
-
-AFD Parallel(const AFD& afd1, const AFD& afd2, const char contor) {
-	AFD result;
-	std::vector<std::pair<std::pair<char, char>, char>> tranzitii;
-	for (auto& it : afd1.GetTranzitii()) {
-		tranzitii.push_back(it);
-	}
-	for (auto& it : afd2.GetTranzitii()) {
-		tranzitii.push_back(it);
-	}
-	tranzitii.push_back(std::make_pair(std::make_pair(contor, '~'), afd1.GetStareInitiala()));
-	tranzitii.push_back(std::make_pair(std::make_pair(contor, '~'), afd2.GetStareInitiala()));
-
-	tranzitii.push_back(std::make_pair(std::make_pair(*(afd1.GetStariFinale().begin()), '~'), contor + 1));
-	tranzitii.push_back(std::make_pair(std::make_pair(*(afd2.GetStariFinale().begin()), '~'), contor + 1));
-
-	result.SetTranzitii(tranzitii);
-	result.SetStareInitiala(contor);
-
-	std::unordered_set<char> stariFinale;
-	stariFinale.insert(contor + 1);
-	result.SetStariFinale(stariFinale);
-
-	std::unordered_set<char> stari;
-	for (auto& it : afd1.GetStari()) {
-		stari.insert(it);
-	}
-	for (auto& it : afd2.GetStari()) {
-		stari.insert(it);
-	}
-	stari.insert(contor);
-	stari.insert(contor + 1);
-	result.SetStari(stari);
-
-	std::unordered_set<char> alfabet;
-	for (auto& it : afd1.GetAlfabet()) {
-		alfabet.insert(it);
-	}
-	for (auto& it : afd2.GetAlfabet()) {
-		alfabet.insert(it);
-	}
-	result.SetAlfabet(alfabet);
-	return result;
-}
-AFD CreateAFDFromPolishForm(std::vector<std::string> polishForm) {
-	std::stack<AFD> AFDstack;
-	char contor = 'A';
-	for (auto& it : polishForm) {
-		if (it == ".") {
-			AFD afd1 = AFDstack.top();
-			AFDstack.pop();
-			AFD afd2 = AFDstack.top();
-			AFDstack.pop();
-			AFD result = Concatenare(afd1, afd2);
-			AFDstack.push(result);
-		}
-		else if (it == "|") {
-			AFD afd1 = AFDstack.top();
-			AFDstack.pop();
-			AFD afd2 = AFDstack.top();
-			AFDstack.pop();
-			AFD result = Parallel(afd1, afd2, contor);
-			AFDstack.push(result);
-
-			contor += 2;
-		}
-		else if (it == "*") {
-			AFD afd1 = AFDstack.top();
-			AFDstack.pop();
-			afd1.inchidereKleene(contor);
-			AFDstack.push(afd1);
-
-			contor += 2;
-		}
-		else if (it == "") {
-			break;
-		}
-		else {
-			char symbol = it[0];
-			AFD result = createAFD(symbol, contor);
-			AFDstack.push(result);
-
-			contor += 2;
-		}
-	}
-	return AFDstack.top();
-}
+AFN createAFN(const char symbol, const char contor);
+AFN Concatenare(const AFN& afn1, const AFN& afn2);
+AFN Parallel(const AFN& afn1, const AFN& afn2, const char contor);
+AFN CreateAFNFromPolishForm(std::vector<std::string> polishForm);
 
 int main()
 {
@@ -175,7 +23,8 @@ int main()
 			std::cout << it;
 		}
 		std::cout << std::endl;
-		AFD result = CreateAFDFromPolishForm(fp);
+		AFN result = CreateAFNFromPolishForm(fp);
+
 
 		std::cout << "Expresia este valida :)" << std::endl << std::endl;
 		while (true)
@@ -273,4 +122,163 @@ int verificare_expresie(std::string expresie)
 	else
 		return 1;
 
+}
+
+AFN createAFN(const char symbol, const char contor)
+{
+	AFN result;
+	std::unordered_set<char> symbols;
+	symbols.insert(symbol);
+	result.SetAlfabet(symbols);
+
+	std::unordered_set<char> stari;
+	stari.insert(contor);
+	stari.insert(contor + 1);
+	result.SetStari(stari);
+
+	result.SetStareInitiala(contor);
+	std::unordered_set<char> stariFinale;
+	stariFinale.insert(contor + 1);
+	result.SetStariFinale(stariFinale);
+
+	std::vector<std::pair<std::pair<char, char>, char>> tranzitii;
+	tranzitii.push_back(std::make_pair(std::make_pair(contor, symbol), contor + 1));
+	result.SetTranzitii(tranzitii);
+
+	return result;
+}
+
+AFN Concatenare(const AFN& afn1, const AFN& afn2)
+{
+	AFN result;
+	result.SetStareInitiala(afn1.GetStareInitiala());
+	result.SetStariFinale(afn2.GetStariFinale());
+	char stareFinalaAFN1 = *(afn1.GetStariFinale().begin());
+	std::vector<std::pair<std::pair<char, char>, char>> tranzitii2;
+	std::vector<std::pair<std::pair<char, char>, char>> tranzitiiFinal;
+	for (auto& it : afn2.GetTranzitii()) {
+		tranzitii2.push_back(it);
+	}
+	for (auto& it : tranzitii2) {
+		if (it.first.first == afn2.GetStareInitiala()) {
+			it.first.first = stareFinalaAFN1;
+		}
+	}
+	for (auto& it : afn1.GetTranzitii()) {
+		tranzitiiFinal.push_back(it);
+	}
+	for (auto& it : tranzitii2) {
+		tranzitiiFinal.push_back(it);
+	}
+	result.SetTranzitii(tranzitiiFinal);
+	std::unordered_set<char> stariAFN2;
+	std::unordered_set<char> stariFinal;
+	for (auto& it : afn2.GetStari()) {
+		if (it != afn2.GetStareInitiala())
+			stariAFN2.insert(it);
+	}
+	for (auto& it : afn1.GetStari()) {
+		stariFinal.insert(it);
+	}
+	for (auto& it : stariAFN2) {
+		stariFinal.insert(it);
+	}
+	result.SetStari(stariFinal);
+	std::unordered_set<char> alfabet;
+	for (auto& it : afn1.GetAlfabet()) {
+		alfabet.insert(it);
+	}
+	for (auto& it : afn2.GetAlfabet()) {
+		alfabet.insert(it);
+	}
+	result.SetAlfabet(alfabet);
+	return result;
+}
+
+AFN Parallel(const AFN& afn1, const AFN& afn2, const char contor) {
+	AFN result;
+	std::vector<std::pair<std::pair<char, char>, char>> tranzitii;
+	for (auto& it : afn1.GetTranzitii()) {
+		tranzitii.push_back(it);
+	}
+	for (auto& it : afn2.GetTranzitii()) {
+		tranzitii.push_back(it);
+	}
+	tranzitii.push_back(std::make_pair(std::make_pair(contor, '~'), afn1.GetStareInitiala()));
+	tranzitii.push_back(std::make_pair(std::make_pair(contor, '~'), afn2.GetStareInitiala()));
+
+	tranzitii.push_back(std::make_pair(std::make_pair(*(afn1.GetStariFinale().begin()), '~'), contor + 1));
+	tranzitii.push_back(std::make_pair(std::make_pair(*(afn2.GetStariFinale().begin()), '~'), contor + 1));
+
+	result.SetTranzitii(tranzitii);
+	result.SetStareInitiala(contor);
+
+	std::unordered_set<char> stariFinale;
+	stariFinale.insert(contor + 1);
+	result.SetStariFinale(stariFinale);
+
+	std::unordered_set<char> stari;
+	for (auto& it : afn1.GetStari()) {
+		stari.insert(it);
+	}
+	for (auto& it : afn2.GetStari()) {
+		stari.insert(it);
+	}
+	stari.insert(contor);
+	stari.insert(contor + 1);
+	result.SetStari(stari);
+
+	std::unordered_set<char> alfabet;
+	for (auto& it : afn1.GetAlfabet()) {
+		alfabet.insert(it);
+	}
+	for (auto& it : afn2.GetAlfabet()) {
+		alfabet.insert(it);
+	}
+	result.SetAlfabet(alfabet);
+	return result;
+}
+
+AFN CreateAFNFromPolishForm(std::vector<std::string> polishForm) {
+	std::stack<AFN> AFNstack;
+	char contor = 'A';
+	for (auto& it : polishForm) {
+		if (it == ".") {
+			AFN afn1 = AFNstack.top();
+			AFNstack.pop();
+			AFN afn2 = AFNstack.top();
+			AFNstack.pop();
+			AFN result = Concatenare(afn2, afn1);
+			AFNstack.push(result);
+		}
+		else if (it == "|") {
+			AFN afn1 = AFNstack.top();
+			AFNstack.pop();
+			AFN afn2 = AFNstack.top();
+			AFNstack.pop();
+			AFN result = Parallel(afn2, afn1, contor);
+			AFNstack.push(result);
+
+			contor += 2;
+		}
+		else if (it == "*") {
+			AFN afn1 = AFNstack.top();
+			AFNstack.pop();
+			afn1.inchidereKleene(contor);
+			AFNstack.push(afn1);
+
+			contor += 2;
+		}
+		else if (it == "") {
+			break;
+		}
+		else {
+			char symbol = it[0];
+			AFN result = createAFN(symbol, contor);
+			AFNstack.push(result);
+
+			contor += 2;
+		}
+	}
+	return AFNstack.top();
 }

@@ -23,6 +23,7 @@ public:
 	bool CeckWord(std::string word);
 	bool IsDeterministic();
 	std::map<char, std::vector<char>> makeTable();
+
 	//setters
 	void SetStari(const std::unordered_set<char>& stari);
 	void SetAlfabet(const std::unordered_set<char>& alfabet);
