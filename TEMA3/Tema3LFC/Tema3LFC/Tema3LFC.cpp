@@ -92,27 +92,27 @@ int main()
 
             switch (choice) {
             case 1:
-                std::cout << "You choosed to display grammar:" << std::endl;
+                std::cout << "You chose to display grammar:" << std::endl;
                 std::cout<<grammar;
                 break;
             case 2:
-                std::cout << "You choosed to generate word in grammar:" << std::endl;
+                std::cout << "You chose to generate word in grammar:" << std::endl;
                 std::cout << "Generated word: " << grammar.generateWord() << std::endl;
                 break;
             case 3:
-                std::cout << "You choosed to display simplified grammar:" << std::endl;
+                std::cout << "You chose to display simplified grammar:" << std::endl;
                 simplified.simplify1();
                 simplified.simplify2();
                 simplified.simplify3();
                 std::cout << simplified;
                 break;
             case 4:
-                std::cout << "You choosed to display grammar in FNG:" << std::endl;
+                std::cout << "You chose to display grammar in FNG:" << std::endl;
                 std::cout << grammarFNG;
                 break;
             case 5:
             {
-                std::cout << "You choosed to generate a word in grammar and verify if it is accepted in automaton"<< std::endl;
+                std::cout << "You chose to generate a word in grammar and verify if it is accepted in automaton"<< std::endl;
                 std::string word = grammar.generateWord();
                 std::cout << "Generated word: " << word << std::endl;
                 if (pdautomaton.Checkword(word))
@@ -127,7 +127,7 @@ int main()
             }
             case 6:
             {
-                std::cout << "You choosed to verify if a input word is accepted by the automaton" << std::endl;
+                std::cout << "You chose to verify if a input word is accepted by the automaton" << std::endl;
                 std::string word;
                 std::cout << "Enter a word to check: ";
                 std::cin >> word;
