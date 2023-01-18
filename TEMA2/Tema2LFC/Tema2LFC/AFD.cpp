@@ -57,3 +57,39 @@ void AFD::makeAFD(AFN& afn)
 		}
 	}
 }
+
+std::ostream& operator<<(std::ostream& out, const AFD& finiteAutomaton)
+{
+	out << '(';
+	out << '{';
+	for (auto& it : finiteAutomaton.m_stari) {
+		out << it.first<<it.second<<",";
+	}
+	out << "\b}, ";
+	out << '{';
+	for (auto& it : finiteAutomaton.m_alfabet) {
+		out << it << ',';
+	}
+	out << "\b}, ";
+
+
+	out << finiteAutomaton.m_stareInitiala.first<<finiteAutomaton.m_stareInitiala.second;
+	out << ", ";
+	out << "{";
+	for (auto& it : finiteAutomaton.m_stariFinale) {
+		out << it.first << it.second << ",";
+	}
+	out << "\b} ";
+	out << ')';
+
+	out << std::endl;
+	int index = 1;
+	for (auto& it : finiteAutomaton.m_tranzitii) {
+		out << "(" << index << ") ";
+		out << '(' << std::get<0>(it).first<<std::get<0>(it).second << ',' << std::get<1>(it) << ") -> " << std::get<2>(it).first << std::get<2>(it).second;
+		out << std::endl;
+		index++;
+	}
+
+	return out;
+}

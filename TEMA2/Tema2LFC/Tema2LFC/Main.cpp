@@ -34,7 +34,7 @@ int main()
 		{
 			std::cout << "1. Afisarea automatului" << std::endl;
 			std::cout << "2. Afisarea inteligibila a expresiei regulate din fisier" << std::endl;
-			std::cout << "3. Verifcarea unui cuvânt în automat" << std::endl;
+			std::cout << "3. Verifcarea unui cuvant in automat" << std::endl;
 			std::cout << "4. Exit" << std::endl;
 			int choice;
 			std::cin >> choice;
@@ -44,6 +44,8 @@ int main()
 			{
 				std::cout << "Afisarea automatului este:" << std::endl;
 				std::cout << result;
+				std::cout << std::endl;
+				std::cout << result2;
 				break;
 			}
 			case 2:
@@ -64,7 +66,7 @@ int main()
 			default:
 				std::cout << "Input gresit. Va rog reincercati." << std::endl;
 			}
-			return 0;
+			
 		}
 	}
 	else

@@ -140,9 +140,10 @@ std::map<char, std::vector<char>> AFN::makeTable()
 
 void AFN::getLambdaClosures(char stare, std::unordered_set<char>& stariInchise)
 {
+	stariInchise.insert(stare);
 	for (auto& it : m_tranzitii) {
 		if (it.first.first == stare && it.first.second == '~') {
-			stariInchise.insert(stare);
+			//stariInchise.insert(stare);
 			stariInchise.insert(it.second);
 			getLambdaClosures(it.second, stariInchise);
 		}
@@ -221,13 +222,17 @@ std::ostream& operator<<(std::ostream& out, const AFN& finiteAutomaton)
 	
 
 	out << finiteAutomaton.m_stareInitiala;
+	out << ", ";
+	out << *finiteAutomaton.GetStariFinale().begin();
 	out << ')';
+
 	out << std::endl;
 	int index = 1;
 	for (auto& it : finiteAutomaton.m_tranzitii) {
 		out << "(" << index << ") ";
-		out << '(' << it.first.first << ',' << it.first.second << ") -> (" << it.second;
+		out << '(' << it.first.first << ',' << it.first.second << ") -> " << it.second;
 		out << std::endl;
+		index++;
 	}
 
 	return out;

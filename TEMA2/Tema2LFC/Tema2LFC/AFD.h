@@ -25,8 +25,7 @@ class AFD
 public:
     AFD() = default;
     void makeAFD(AFN& afn);
-    AFD(AFD& other) = default;
-    AFD(AFD&& other) = default;
+    friend std::ostream& operator<<(std::ostream& out, const AFD& finiteAutomaton);
     ~AFD() = default;
 };
 
