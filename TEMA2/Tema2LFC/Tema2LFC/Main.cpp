@@ -1,5 +1,6 @@
 #include "formaPoloneza.h"
 #include "AFN.h"
+#include "AFD.h"
 #include <iostream>
 #include <regex>
 
@@ -8,6 +9,7 @@ AFN createAFN(const char symbol, const char contor);
 AFN Concatenare(const AFN& afn1, const AFN& afn2);
 AFN Parallel(const AFN& afn1, const AFN& afn2, const char contor);
 AFN CreateAFNFromPolishForm(std::vector<std::string> polishForm);
+
 
 int main()
 {
@@ -24,7 +26,8 @@ int main()
 		}
 		std::cout << std::endl;
 		AFN result = CreateAFNFromPolishForm(fp);
-
+		AFD result2;
+		result2.makeAFD(result);
 
 		std::cout << "Expresia este valida :)" << std::endl << std::endl;
 		while (true)
@@ -40,6 +43,7 @@ int main()
 			case 1:
 			{
 				std::cout << "Afisarea automatului este:" << std::endl;
+				std::cout << result;
 				break;
 			}
 			case 2:
@@ -280,5 +284,8 @@ AFN CreateAFNFromPolishForm(std::vector<std::string> polishForm) {
 			contor += 2;
 		}
 	}
-	return AFNstack.top();
+	AFN result = AFNstack.top();
+	result.SetNullChar('~');
+		return result;
 }
+

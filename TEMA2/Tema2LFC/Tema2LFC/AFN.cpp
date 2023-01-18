@@ -85,7 +85,7 @@ bool AFN::VerifyAutomaton()
 	return true;
 }
 
-bool AFN::CeckWord(std::string word)
+bool AFN::CheckWord(std::string word)
 {
 	std::map<char, std::vector<char>> tabela = makeTable();
 	std::unordered_set<char> stariCurente;
@@ -137,6 +137,19 @@ std::map<char, std::vector<char>> AFN::makeTable()
 
 	return tabela;
 }
+
+void AFN::getLambdaClosures(char stare, std::unordered_set<char>& stariInchise)
+{
+	for (auto& it : m_tranzitii) {
+		if (it.first.first == stare && it.first.second == '~') {
+			stariInchise.insert(stare);
+			stariInchise.insert(it.second);
+			getLambdaClosures(it.second, stariInchise);
+		}
+	}
+}
+
+
 void AFN::SetStari(const std::unordered_set<char>& stari)
 {
 	m_stari = stari;
@@ -160,6 +173,11 @@ void AFN::SetStareInitiala(const char& stareInitiala)
 void AFN::SetStariFinale(const std::unordered_set<char>& stariFinale)
 {
 	m_stariFinale = stariFinale;
+}
+
+void AFN::SetNullChar(const char& nullChar)
+{
+	m_nullcharacter = nullChar;
 }
 
 std::unordered_set<char> AFN::GetStari() const

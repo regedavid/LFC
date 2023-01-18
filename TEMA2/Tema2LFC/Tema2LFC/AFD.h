@@ -1,16 +1,32 @@
 #pragma once
 #include <unordered_set>
 #include <iostream>
-#include"AFN.h"
+#include <queue>
+#include "AFN.h"
 
-class AFD : public AFN
+struct hashFunction
 {
-    std::unordered_set<std::unordered_set<char>> m_stari;
+    size_t operator()(const std::pair<char,
+        int>& x) const
+    {
+        return x.first ^ x.second;
+    }
+};
+
+class AFD
+{
+
+    std::unordered_set<std::pair<char, int>, hashFunction> m_stari;
     std::unordered_set<char> m_alfabet;
-    std::vector<std::pair<std::pair<std::unordered_set<char>, char>, std::unordered_set<char>>> m_tranzitii;
-    std::unordered_set<char> m_stareInitiala;
-    std::unordered_set<char> m_stariFinale;
+    std::vector<std::tuple<std::pair<char, int>, char, std::pair<char, int>>> m_tranzitii;
+    std::pair<char,int> m_stareInitiala;
+    std::unordered_set<std::pair<char,int>,hashFunction> m_stariFinale;
+
 public:
-    void TransformToAFD(AFN& afn);
+    AFD() = default;
+    void makeAFD(AFN& afn);
+    AFD(AFD& other) = default;
+    AFD(AFD&& other) = default;
+    ~AFD() = default;
 };
 
