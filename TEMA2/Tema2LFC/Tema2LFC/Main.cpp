@@ -3,14 +3,129 @@
 #include <iostream>
 #include <regex>
 
-// calculele tre sa faca toate nebuniile cu automatonul in fct de forma poloneza
-float calcul_forma_poloneza(std::vector<std::string> fp);
-float calcul(float x, float y, char element);
-
-// sa verificat si moficat expresia data sa fie calumea
 int verificare_expresie(std::string expresie);
+AFN createAFN(const char symbol, const char contor);
+AFN Concatenare(const AFN& afn1, const AFN& afn2);
+AFN Parallel(const AFN& afn1, const AFN& afn2, const char contor);
+AFN CreateAFNFromPolishForm(std::vector<std::string> polishForm);
 
-AFN createAFN(const char symbol, const char contor) {
+int main()
+{
+	std::ifstream in("date.in");
+	std::string expresie;
+	getline(in, expresie);
+	if (verificare_expresie(expresie) == 1)
+	{
+		formaPoloneza f;
+		std::vector<std::string>fp = f(expresie);
+		for (auto& it : fp)
+		{
+			std::cout << it;
+		}
+		std::cout << std::endl;
+		AFN result = CreateAFNFromPolishForm(fp);
+
+
+		std::cout << "Expresia este valida :)" << std::endl << std::endl;
+		while (true)
+		{
+			std::cout << "1. Afisarea automatului" << std::endl;
+			std::cout << "2. Afisarea inteligibila a expresiei regulate din fisier" << std::endl;
+			std::cout << "3. Verifcarea unui cuvânt în automat" << std::endl;
+			std::cout << "4. Exit" << std::endl;
+			int choice;
+			std::cin >> choice;
+			switch (choice)
+			{
+			case 1:
+			{
+				std::cout << "Afisarea automatului este:" << std::endl;
+				break;
+			}
+			case 2:
+			{
+				std::cout << "Afisarea inteligibila a expresiei regulate din fisier este:" << std::endl;
+				break;
+			}
+			case 3:
+			{
+				std::cout << "Ai ales sa verifici un cuvânt în automat" << std::endl;
+				std::string word;
+				std::cout << "Cuvantul de verificat este: ";
+				std::cin >> word;
+				break;
+			}
+			case 4:
+				return 0;
+			default:
+				std::cout << "Input gresit. Va rog reincercati." << std::endl;
+			}
+			return 0;
+		}
+	}
+	else
+	{
+		std::cout << "Expresia nu este valida." << std::endl;
+		return 0;
+	}
+	
+
+}
+
+int verificare_expresie(std::string expresie)
+{
+	std::regex find("([*]+)");
+	std::string replace("*");
+	expresie = std::regex_replace(expresie, find, replace);
+
+	std::string op_cu_paranteze(" ().*|");
+	std::string op_fara(".*|");
+	std::stack<char> paranteze;
+	char prev(' ');
+	for (char c : expresie)
+	{
+		if (isalpha(c)==0 && op_cu_paranteze.find(c)==std::string::npos)
+		{
+			std::cerr << "Caractere nepermise" << std::endl;
+			return 0;
+		}
+		if (op_fara.find(c) != std::string::npos && (op_fara.find(prev) != std::string::npos || prev=='('))
+		{
+			std::cerr << "Prea multi operatori" << std::endl;
+			return 0;
+		}
+		else
+			if (op_cu_paranteze.find(c) != std::string::npos)
+				prev = c;
+		if (isalpha(c) != 0)
+			prev = ' ';
+
+		if (c == '(')
+			paranteze.push(c);
+		if (c == ')' && paranteze.top() == '(')
+		{
+			paranteze.pop();
+		}
+		if (paranteze.size() != 0)
+			if (c == ')' && paranteze.top() != '(')
+			{
+				std::cerr << "Parantezare gresita"<<std::endl;
+				return 0;
+			}
+	}
+
+	if (paranteze.size() != 0)
+	{
+		std::cerr << "Parantezare gresita" << std::endl;
+		return 0;
+	}
+	else
+		return 1;
+
+}
+
+AFN createAFN(const char symbol, const char contor)
+{
 	AFN result;
 	std::unordered_set<char> symbols;
 	symbols.insert(symbol);
@@ -33,7 +148,8 @@ AFN createAFN(const char symbol, const char contor) {
 	return result;
 }
 
-AFN Concatenare(const AFN& afn1, const AFN& afn2) {
+AFN Concatenare(const AFN& afn1, const AFN& afn2)
+{
 	AFN result;
 	result.SetStareInitiala(afn1.GetStareInitiala());
 	result.SetStariFinale(afn2.GetStariFinale());
@@ -44,7 +160,7 @@ AFN Concatenare(const AFN& afn1, const AFN& afn2) {
 		tranzitii2.push_back(it);
 	}
 	for (auto& it : tranzitii2) {
-		if(it.first.first==afn2.GetStareInitiala()){
+		if (it.first.first == afn2.GetStareInitiala()) {
 			it.first.first = stareFinalaAFN1;
 		}
 	}
@@ -58,8 +174,8 @@ AFN Concatenare(const AFN& afn1, const AFN& afn2) {
 	std::unordered_set<char> stariAFN2;
 	std::unordered_set<char> stariFinal;
 	for (auto& it : afn2.GetStari()) {
-		if(it!= afn2.GetStareInitiala())
-		stariAFN2.insert(it);	
+		if (it != afn2.GetStareInitiala())
+			stariAFN2.insert(it);
 	}
 	for (auto& it : afn1.GetStari()) {
 		stariFinal.insert(it);
@@ -122,6 +238,7 @@ AFN Parallel(const AFN& afn1, const AFN& afn2, const char contor) {
 	result.SetAlfabet(alfabet);
 	return result;
 }
+
 AFN CreateAFNFromPolishForm(std::vector<std::string> polishForm) {
 	std::stack<AFN> AFNstack;
 	char contor = 'A';
@@ -131,7 +248,7 @@ AFN CreateAFNFromPolishForm(std::vector<std::string> polishForm) {
 			AFNstack.pop();
 			AFN afn2 = AFNstack.top();
 			AFNstack.pop();
-			AFN result = Concatenare(afn1, afn2);
+			AFN result = Concatenare(afn2, afn1);
 			AFNstack.push(result);
 		}
 		else if (it == "|") {
@@ -139,7 +256,7 @@ AFN CreateAFNFromPolishForm(std::vector<std::string> polishForm) {
 			AFNstack.pop();
 			AFN afn2 = AFNstack.top();
 			AFNstack.pop();
-			AFN result = Parallel(afn1, afn2, contor);
+			AFN result = Parallel(afn2, afn1, contor);
 			AFNstack.push(result);
 
 			contor += 2;
@@ -164,157 +281,4 @@ AFN CreateAFNFromPolishForm(std::vector<std::string> polishForm) {
 		}
 	}
 	return AFNstack.top();
-}
-
-int main()
-{
-	std::ifstream in("date.in");
-	std::string expresie;
-	getline(in, expresie);
-	if (verificare_expresie(expresie) == 1)
-	{
-		formaPoloneza f;
-		std::vector<std::string>fp = f(expresie);
-		for (auto& it : fp)
-		{
-			std::cout << it;
-		}
-		std::cout << std::endl;
-		AFN result = CreateAFNFromPolishForm(fp);
-
-		std::cout << "Expresia este valida :)" << std::endl << std::endl;
-		while (true)
-		{
-			std::cout << "1. Afisarea automatului" << std::endl;
-			std::cout << "2. Afisarea inteligibila a expresiei regulate din fisier" << std::endl;
-			std::cout << "3. Verifcarea unui cuvânt în automat" << std::endl;
-			std::cout << "4. Exit" << std::endl;
-			int choice;
-			std::cin >> choice;
-			switch (choice)
-			{
-			case 1:
-			{
-				std::cout << "Afisarea automatului este:" << std::endl;
-				break;
-			}
-			case 2:
-			{
-				std::cout << "Afisarea inteligibila a expresiei regulate din fisier este:" << std::endl;
-				break;
-			}
-			case 3:
-			{
-				std::cout << "Ai ales sa verifici un cuvânt în automat" << std::endl;
-				std::string word;
-				std::cout << "Cuvantul de verificat este: ";
-				std::cin >> word;
-				break;
-			}
-			case 4:
-				return 0;
-			default:
-				std::cout << "Input gresit. Va rog reincercati." << std::endl;
-			}
-			return 0;
-		}
-	}
-	else
-	{
-		std::cout << "The grammar is not valid or IDC." << std::endl;
-		return 0;
-	}
-	
-
-}
-
-float calcul_forma_poloneza(std::vector<std::string> fp)
-{
-	std::stack<float> num;
-	//o sa vina un stack de automate presupun
-
-	for (std::string element : fp)
-	{
-		if (isalnum(element[0]) != 0)
-		{
-			float val = std::stof(element);
-			num.push(val);
-		}
-		else
-		{
-			float y = num.top();
-			num.pop();
-			float x = num.top();
-			num.pop();
-			float rez = calcul(x, y, element[0]);
-			num.push(rez);
-		}
-	}
-	return num.top();
-}
-
-float calcul(float x, float y, char element)
-{
-	if (element == '-')
-		return x - y;
-	if (element == '+')
-		return x + y;
-	if (element == '/')
-		return x / y;
-	if (element == '*')
-		return x * y;
-	if (element == '^')
-		return pow(x, y);
-}
-
-int verificare_expresie(std::string expresie)
-{
-	std::regex find("([*]+)");
-	std::string replace("*");
-	expresie = std::regex_replace(expresie, find, replace);
-
-	std::string op_cu_paranteze(" ().*|");
-	std::string op_fara(".*|");
-	std::stack<char> paranteze;
-	char prev(' ');
-	for (char c : expresie)
-	{
-		if (isalpha(c)==0 && op_cu_paranteze.find(c)==std::string::npos)
-		{
-			std::cerr << "Caractere nepermise" << std::endl;
-			return 0;
-		}
-		if (op_fara.find(c) != std::string::npos && (op_fara.find(prev) != std::string::npos || prev=='('))
-		{
-			std::cerr << "Prea multi operatori" << std::endl;
-			return 0;
-		}
-		else
-			if (op_cu_paranteze.find(c) != std::string::npos)
-				prev = c;
-		if (isalpha(c) != 0)
-			prev = ' ';
-
-		if (c == '(')
-			paranteze.push(c);
-		if (c == ')' && paranteze.top() == '(')
-		{
-			paranteze.pop();
-		}
-		if (paranteze.size() != 0)
-			if (c == ')' && paranteze.top() != '(')
-			{
-				std::cerr << "Parantezare gresita"<<std::endl;
-				return 0;
-			}
-	}
-
-	if (paranteze.size() != 0)
-	{
-		std::cerr << "Parantezare gresita" << std::endl;
-		return 0;
-	}
-	else
-		return 1;
-
 }

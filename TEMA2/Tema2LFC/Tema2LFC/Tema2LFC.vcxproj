@@ -127,6 +127,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AFD.cpp" />
     <ClCompile Include="AFN.cpp" />
     <ClCompile Include="formaPoloneza.cpp" />
     <ClCompile Include="formaPoloneza.h" />
@@ -136,6 +137,7 @@
     <None Include="date.in" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AFD.h" />
     <ClInclude Include="AFN.h" />
   </ItemGroup>
   <ItemGroup>

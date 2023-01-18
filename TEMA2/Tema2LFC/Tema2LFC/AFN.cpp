@@ -1,5 +1,50 @@
 #include "AFN.h"
 
+std::unordered_set<char> AFN::EpsilonClosure(std::unordered_set<char> states)
+{
+	std::unordered_set<char> closure = states;
+	std::vector<char> queue(states.begin(), states.end());
+	int start = 0;
+
+	while (start < queue.size())
+	{
+		char state = queue[start];
+		start++;
+
+		for (auto transition : m_tranzitii)
+		{
+			if (transition.first.first == state && transition.first.second == m_nullcharacter)
+			{
+				char next = transition.second;
+				if (closure.count(next) == 0)
+				{
+					closure.insert(next);
+					queue.push_back(next);
+				}
+			}
+		}
+	}
+	return closure;
+}
+
+std::unordered_set<char> AFN::GetTransition(char state, char symbol)
+{
+	std::unordered_set<char> nextStates;
+	for (auto transition : m_tranzitii)
+	{
+		if (transition.first.first == state && transition.first.second == symbol)
+		{
+			nextStates.insert(transition.second);
+		}
+	}
+	return nextStates;
+}
+
+bool AFN::IsFinalState(char state)
+{
+	return m_stariFinale.count(state) > 0;
+}
+
 void AFN::inchidereKleene(char contor)
 {
 	m_tranzitii.push_back(std::make_pair(std::make_pair(*m_stariFinale.begin(), '~'),m_stareInitiala));
@@ -14,6 +59,84 @@ void AFN::inchidereKleene(char contor)
 	m_stari.insert(contor + 1);
 }
 
+bool AFN::VerifyAutomaton()
+{
+	for (const auto& tranzitie : m_tranzitii)
+	{
+		std::pair<char, char> stareSimb; char stare, simb, rez;
+		stareSimb = tranzitie.first;
+		rez = tranzitie.second;
+		stare = stareSimb.first;
+		stare = stareSimb.second;
+		int count = 0, count2 = 0;
+		for (const auto& listaStari : m_stari)
+		{
+			if (listaStari != stare)
+				count++;
+			if (listaStari != rez)
+				count2++;
+		}
+		if (count == m_stari.size() || count2 == m_stari.size())
+			return false;
+
+		if (m_alfabet.find(simb) == m_alfabet.end())
+			return false;
+	}
+	return true;
+}
+
+bool AFN::CeckWord(std::string word)
+{
+	std::map<char, std::vector<char>> tabela = makeTable();
+	std::unordered_set<char> stariCurente;
+	stariCurente.insert(m_stareInitiala);
+	std::unordered_set<char> stariNoi;
+
+	for (const auto& litera : word)
+	{
+		for (const auto& stare : stariCurente)
+		{
+			for (const auto& elem : tabela[stare + litera])
+				stariNoi.insert(elem);
+		}
+		stariCurente = stariNoi;
+		stariNoi.clear();
+	}
+
+	for (const auto& stareFinala : m_stariFinale)
+	{
+		for (const auto& stare : stariCurente)
+			if (stareFinala == stare)
+				return true;
+	}
+	return false;
+}
+
+bool AFN::IsDeterministic()
+{
+	std::map<char, std::vector<char>> tabela = makeTable();
+	for (const auto& elem : tabela)
+	{
+		if (elem.second.size() > 1)
+			return false;
+	}
+	return true;
+}
+
+std::map<char, std::vector<char>> AFN::makeTable()
+{
+	std::map<char, std::vector<char>> tabela;
+	std::pair<char, char> stareSimb; char rez;
+
+	for (const auto& tranzitie : m_tranzitii)
+	{
+		stareSimb = tranzitie.first;
+		rez = tranzitie.second;
+		tabela[stareSimb.first + stareSimb.second].push_back(rez);
+	}
+
+	return tabela;
+}
 void AFN::SetStari(const std::unordered_set<char>& stari)
 {
 	m_stari = stari;
@@ -80,17 +203,13 @@ std::ostream& operator<<(std::ostream& out, const AFN& finiteAutomaton)
 	
 
 	out << finiteAutomaton.m_stareInitiala;
-	out << ", ";
-	out << *finiteAutomaton.GetStariFinale().begin();
 	out << ')';
-
 	out << std::endl;
 	int index = 1;
 	for (auto& it : finiteAutomaton.m_tranzitii) {
 		out << "(" << index << ") ";
-		out << '(' << it.first.first << ',' << it.first.second << ") -> " << it.second;
+		out << '(' << it.first.first << ',' << it.first.second << ") -> (" << it.second;
 		out << std::endl;
-		index++;
 	}
 
 	return out;

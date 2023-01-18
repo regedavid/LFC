@@ -1,6 +1,7 @@
 #pragma once
 #include <unordered_set>
 #include <iostream>
+#include <map>
 
 class AFN
 {
@@ -12,8 +13,16 @@ class AFN
 	std::unordered_set<char> m_stariFinale;
 
 public:
+	std::unordered_set<char> EpsilonClosure(std::unordered_set<char> states);
+	std::unordered_set<char> GetTransition(char state, char symbol);
+	bool IsFinalState(char state);
 	friend std::ostream& operator<<(std::ostream& out, const AFN& finiteAutomaton);
 	void inchidereKleene(char contor);
+
+	bool VerifyAutomaton();
+	bool CeckWord(std::string word);
+	bool IsDeterministic();
+	std::map<char, std::vector<char>> makeTable();
 
 	//setters
 	void SetStari(const std::unordered_set<char>& stari);
