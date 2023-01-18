@@ -138,6 +138,9 @@
   <ItemGroup>
     <ClInclude Include="AFN.h" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="regexes.txt" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
