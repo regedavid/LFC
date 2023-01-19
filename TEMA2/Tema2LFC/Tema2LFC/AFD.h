@@ -26,6 +26,7 @@ public:
     AFD() = default;
     void makeAFD(AFN& afn);
     friend std::ostream& operator<<(std::ostream& out, const AFD& finiteAutomaton);
+    bool checkWord(std::string word);
     ~AFD() = default;
 };
 
