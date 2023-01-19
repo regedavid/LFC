@@ -20,50 +20,60 @@ bool PDAutomaton::isDeterministic()
 
 bool PDAutomaton::Checkword(std::string word)
 {
-	char currentState = m_stareInitiala;
 	m_stiva.push(m_stareInitialaPD);
-	for (int i = 0; i < word.length(); i++) {
-		char currentChar = word[i];
-		bool foundTransition = false;
-		std::vector<int> validTransitions;
-		for (int j = 0; j < m_tranzitii.size(); j++) {
-			if (currentState == std::get<0>(m_tranzitii[j].first) && currentChar == std::get<1>(m_tranzitii[j].first) && m_stiva.top() == std::get<2>(m_tranzitii[j].first)) {
-				validTransitions.push_back(j);
-				foundTransition = true;
-			}
-		}
-		if (!foundTransition) {
-			while (!m_stiva.empty())
+	char currentState = m_stareInitiala;
+	return Checkwordrec(currentState, word, m_stiva);
+}
+
+bool PDAutomaton::Checkwordrec(char currentState, std::string word, std::stack<char> m_stiva)
+{
+	bool foundTransition = false;
+	for (int j = 0; j < m_tranzitii.size(); j++) 
+	{
+		if (currentState == std::get<0>(m_tranzitii[j].first) && word[0] == std::get<1>(m_tranzitii[j].first) && m_stiva.top() == std::get<2>(m_tranzitii[j].first))
+		{
+			foundTransition = true;
+			m_stiva.pop();
+			if (m_tranzitii[j].second.second[0] != '~')
 			{
-				m_stiva.pop();
+				for (int k = m_tranzitii[j].second.second.size() - 1; k >= 0; k--)
+				{
+					m_stiva.push(m_tranzitii[j].second.second[k]);
+				}
 			}
-			return false;
-		}
-		int chosenTransition = validTransitions[rand() % validTransitions.size()];
-		currentState = m_tranzitii[chosenTransition].second.first;
-		std::string stackString = m_tranzitii[chosenTransition].second.second;
-		if (stackString[0] != '~') {
-			m_stiva.pop();
-		}
-		for (int k = stackString.length() - 1; k >= 0; k--) {
-			if (stackString[k] != '~') {
-				m_stiva.push(stackString[k]);
+			currentState = m_tranzitii[j].second.first;
+			std::string new_word = word.substr(1, word.size() - 1);
+			if (m_stiva.size() != 0)
+			{
+				if (word.size() == 1)
+				{
+					return 0;
+				}
+				if (Checkwordrec(currentState, new_word, m_stiva) == 0)
+				{
+					bool foundTransition = false;
+					for (int k = 0; k < m_tranzitii[j].second.second.size(); k++)
+						m_stiva.pop();
+					m_stiva.push(std::get<2>(m_tranzitii[j].first));
+					currentState = std::get<0>(m_tranzitii[j].first);
+				}
+				else
+				{
+					return 1;
+				}
 			}
+			else 
+				if (word.size() == 1)
+			    {
+				    return 1;
+			    }
+			else
+				return 0;
 		}
 	}
-	if (m_stariFinale.find(currentState) != m_stariFinale.end()) {
-		while (!m_stiva.empty())
-		{
-			m_stiva.pop();
-		}
-		return true;
-	}
-	else {
-		while (!m_stiva.empty())
-		{
-			m_stiva.pop();
-		}
-		return false;
+	if (foundTransition == false)
+	{
+		return 0;
 	}
 }
 

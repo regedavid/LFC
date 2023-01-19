@@ -28,3 +28,13 @@ B SC
 C CD
 C c
 D b
+
+S
+2
+S B 
+2
+a b 
+3
+S aSB
+S aB
+B b
