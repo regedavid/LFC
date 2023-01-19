@@ -21,6 +21,7 @@ public:
 	bool isDeterministic();
 	friend std::ostream& operator<<(std::ostream& out, const PDAutomaton& PDAutomaton);
 	bool Checkword(std::string word);
+	bool Checkwordrec(char currentState, std::string word, std::stack<char> m_stiva);
 	//Setteri
 	void SetStari(const std::unordered_set<char>& stari);
 	void SetAlfabet(const std::unordered_set<char>& alfabet);
