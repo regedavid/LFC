@@ -20,6 +20,7 @@ bool PDAutomaton::isDeterministic()
 
 bool PDAutomaton::Checkword(std::string word)
 {
+	ClearStiva();
 	m_stiva.push(m_stareInitialaPD);
 	char currentState = m_stareInitiala;
 	return Checkwordrec(currentState, word, m_stiva);
@@ -106,6 +107,12 @@ void PDAutomaton::SetStareInitialaStiva(const char& stareInitialaStiva)
 void PDAutomaton::SetNullCharacter(const char& nullChar)
 {
 	m_nullcharacter = nullChar;
+}
+
+void PDAutomaton::ClearStiva()
+{
+	while (m_stiva.empty() == false)
+		m_stiva.pop();
 }
 
 std::ostream& operator<<(std::ostream& out, const PDAutomaton& PDAutomaton)
