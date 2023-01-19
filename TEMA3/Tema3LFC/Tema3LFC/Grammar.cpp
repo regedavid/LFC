@@ -386,7 +386,7 @@ void Grammar::getSimplifiedGrammar()
 }
 
 void Grammar::ChomskyNormalForm()
-{
+{	
 	char symbol = getMaxNeterminal() + 1;
 	std::vector<std::pair<std::string, std::string>> additions;
 	for (auto& terminal : m_terminale) {
@@ -460,6 +460,7 @@ void Grammar::ChomskyNormalForm()
 
 void Grammar::GreibachNormalForm()
 {
+	this->sortGrammar();
 	char symbol = getMaxNeterminal() + 1;
 	std::unordered_set<char> addedSymbols;
 	std::unordered_set<char> step1Neterminale;
@@ -542,6 +543,42 @@ void Grammar::GreibachNormalForm()
 	}
 }
 
+bool Grammar::isInChomskyForm()
+{
+	for (auto& productie : m_productii) {
+		bool fromVN = true;
+		if (productie.second.size() == 2) {
+			for (auto& character : productie.second) {
+				if (m_neterminale.find(character) == m_neterminale.end()) {
+					fromVN = false;
+				}
+			}
+		}
+		if (!(productie.second.size() == 1 && m_terminale.find(productie.second[0]) != m_terminale.end()) && !(productie.second.size() == 2 && fromVN)) {
+			return false;
+		}
+	}
+	return true;
+}
+
+bool Grammar::isInGreibachForm()
+{
+	for (auto& productie : m_productii) {
+		if (m_terminale.find(productie.second[0]) == m_terminale.end()) {
+			return false;
+		}
+		bool fromVN = true;
+		if (productie.second.size() > 1) {
+			for (auto it = productie.second.begin()+1; it != productie.second.end();it++) {
+				if (m_neterminale.find(*it) == m_neterminale.end()) {
+					return false;
+				}
+			}
+		}
+	}
+	return true;
+}
+
 const std::unordered_set<char> Grammar::GetNeterminale() const
 {
 	return m_neterminale;
@@ -571,13 +608,18 @@ void Grammar::sortGrammar()
 char Grammar::getMaxNeterminal()
 {
 	char max = 0;
-	for (auto& it : m_neterminale) {
-		if (it > max) {
-			if(it!=m_startSymbol)
-			max = it;
+	if (m_neterminale.size() > 1) {
+		for (auto& it : m_neterminale) {
+			if (it > max) {
+				if (it != m_startSymbol)
+					max = it;
+			}
 		}
+		return max;
 	}
-	return max;
+	else {
+		return 'A';
+	}
 }
 
 const std::unordered_set<char> Grammar::GetTerminale() const

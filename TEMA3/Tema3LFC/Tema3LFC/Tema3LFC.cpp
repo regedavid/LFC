@@ -72,9 +72,17 @@ int main()
     {
         Grammar simplified = grammar;
         simplified.getSimplifiedGrammar();
+        simplified.simplify1();
+        simplified.simplify2();
+
         Grammar grammarFNG = simplified;
-        grammarFNG.ChomskyNormalForm();
-        grammarFNG.GreibachNormalForm();
+
+        if (!grammarFNG.isInChomskyForm() && !grammarFNG.isInGreibachForm()) {
+            grammarFNG.ChomskyNormalForm();
+        }
+        if (!grammarFNG.isInGreibachForm()) {
+            grammarFNG.GreibachNormalForm();
+        }
         GrammarToPDAutomaton(grammarFNG, pdautomaton);
 
         std::cout << "The grammar is valid and IDC! :)" << std::endl<< std::endl;
@@ -98,7 +106,7 @@ int main()
                 break;
             case 2:
                 std::cout << "You chose to generate word in grammar:" << std::endl;
-                std::cout << "Generated word: " << grammar.generateWord() << std::endl;
+                std::cout << "Generated word: " << grammarFNG.generateWord() << std::endl;
                 break;
             case 3:
                 std::cout << "You chose to display simplified grammar:" << std::endl;                             
@@ -111,7 +119,7 @@ int main()
             case 5:
             {
                 std::cout << "You chose to generate a word in grammar and verify if it is accepted in automaton"<< std::endl;
-                std::string word = grammar.generateWord();
+                std::string word = grammarFNG.generateWord();
                 std::cout << "Generated word: " << word << std::endl;
                 if (pdautomaton.Checkword(word))
                 {

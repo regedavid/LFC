@@ -40,6 +40,9 @@ public:
 	void ChomskyNormalForm();
 	void GreibachNormalForm();
 
+	bool isInChomskyForm();
+	bool isInGreibachForm();
+
 	friend bool operator<(const std::pair<std::string, std::string>& productie1, const std::pair<std::string, std::string>& productie2);
 	friend std::ostream& operator<<(std::ostream& out, const Grammar& grammar);
 	//sortarea gramaticii in functie de neterminalul din dreapta
