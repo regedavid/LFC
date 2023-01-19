@@ -31,5 +31,6 @@ public:
 	void SetStariStiva(const std::unordered_set<char>& stariStiva);
 	void SetStareInitialaStiva(const char& stareInitialaStiva);
 	void SetNullCharacter(const char& nullChar);
+	void ClearStiva();
 };
 
