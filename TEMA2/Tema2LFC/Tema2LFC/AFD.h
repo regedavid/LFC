@@ -15,7 +15,6 @@ struct hashFunction
 
 class AFD
 {
-
     std::unordered_set<std::pair<char, int>, hashFunction> m_stari;
     std::unordered_set<char> m_alfabet;
     std::vector<std::tuple<std::pair<char, int>, char, std::pair<char, int>>> m_tranzitii;
@@ -24,9 +23,15 @@ class AFD
 
 public:
     AFD() = default;
+
     void makeAFD(AFN& afn);
     friend std::ostream& operator<<(std::ostream& out, const AFD& finiteAutomaton);
     bool checkWord(std::string word);
+    bool VerifyAutomaton();
+    bool IsDeterministic();
+
+    std::map<char, std::vector<std::pair<char, int>>> makeMap();
+
     ~AFD() = default;
 };
 

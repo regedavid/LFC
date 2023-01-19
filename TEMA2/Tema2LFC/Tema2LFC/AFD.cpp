@@ -58,6 +58,59 @@ void AFD::makeAFD(AFN& afn)
 	}
 }
 
+bool AFD::IsDeterministic()
+{
+	std::map<char, std::vector<std::pair<char, int>>> tabela = makeMap();
+	for (const auto& elem : tabela)
+	{
+		if (elem.second.size() > 1)
+			return false;
+	}
+	return true;
+}
+
+bool AFD::VerifyAutomaton()
+{
+	for (const auto& tranzitie : m_tranzitii)
+	{
+		std::pair<char, char> stare, rez; char simb;
+		stare = std::get<0>(tranzitie);
+		simb = std::get<1>(tranzitie);
+		rez = std::get<2>(tranzitie);
+		int count = 0, count2 = 0;
+		for (const auto& listaStari : m_stari)
+		{
+			if (listaStari.first != stare.first && listaStari.second != stare.second)
+				count++;
+			if (listaStari.first != rez.first && listaStari.second != rez.second)
+				count2++;
+		}
+		if (count == m_stari.size() || count2 == m_stari.size())
+			return false;
+
+		if (m_alfabet.find(simb) == m_alfabet.end())
+			return false;
+	}
+	return true;
+}
+
+std::map<char, std::vector<std::pair<char, int>>> AFD::makeMap()
+{
+	std::map<char, std::vector<std::pair<char, int>>> tabela;
+	std::pair<char, int> stare, rez;
+	char simb;
+
+	for (const auto& tranzitie : m_tranzitii)
+	{
+		stare = std::get<0>(tranzitie);
+		simb = std::get<1>(tranzitie);
+		rez = std::get<2>(tranzitie);
+		tabela[stare.first + stare.second + simb].push_back(rez);
+	}
+
+	return tabela;
+}
+
 bool AFD::checkWord(std::string word)
 {
 	std::pair<char, int> stareCurenta = { 'q',0 };
@@ -97,6 +150,7 @@ std::ostream& operator<<(std::ostream& out, const AFD& finiteAutomaton)
 	}
 	out << "\b}, ";
 
+	out << "Tanz, ";
 
 	out << finiteAutomaton.m_stareInitiala.first<<finiteAutomaton.m_stareInitiala.second;
 	out << ", ";
@@ -108,6 +162,7 @@ std::ostream& operator<<(std::ostream& out, const AFD& finiteAutomaton)
 	out << ')';
 
 	out << std::endl;
+	out << "Tranz="<< std::endl;
 	int index = 1;
 	for (auto& it : finiteAutomaton.m_tranzitii) {
 		out << "(" << index << ") ";

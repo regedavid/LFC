@@ -20,10 +20,6 @@ int main()
 	{
 		formaPoloneza f;
 		std::vector<std::string>fp = f(expresie);
-		for (auto& it : fp)
-		{
-			std::cout << it;
-		}
 		std::cout << std::endl;
 		AFN result = CreateAFNFromPolishForm(fp);
 		AFD result2;
@@ -36,6 +32,7 @@ int main()
 			std::cout << "2. Afisarea inteligibila a expresiei regulate din fisier" << std::endl;
 			std::cout << "3. Verifcarea unui cuvant in automat" << std::endl;
 			std::cout << "4. Exit" << std::endl;
+			std::cout << std::endl;
 			int choice;
 			std::cin >> choice;
 			switch (choice)
@@ -43,9 +40,8 @@ int main()
 			case 1:
 			{
 				std::cout << "Afisarea automatului este:" << std::endl;
-				std::cout << result;
-				std::cout << std::endl;
 				std::cout << result2;
+				std::cout << std::endl;
 				break;
 			}
 			case 2:
@@ -72,9 +68,10 @@ int main()
 				break;
 			}
 			case 4:
-				return 0;
+				break;
 			default:
 				std::cout << "Input gresit. Va rog reincercati." << std::endl;
+				break;
 			}
 			
 		}
