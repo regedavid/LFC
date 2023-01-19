@@ -45,13 +45,9 @@ bool PDAutomaton::Checkwordrec(char currentState, std::string word, std::stack<c
 			std::string new_word = word.substr(1, word.size() - 1);
 			if (m_stiva.size() != 0)
 			{
-				if (word.size() == 1)
-				{
-					return 0;
-				}
 				if (Checkwordrec(currentState, new_word, m_stiva) == 0)
 				{
-					bool foundTransition = false;
+					foundTransition = false;
 					for (int k = 0; k < m_tranzitii[j].second.second.size(); k++)
 						m_stiva.pop();
 					m_stiva.push(std::get<2>(m_tranzitii[j].first));
@@ -63,12 +59,12 @@ bool PDAutomaton::Checkwordrec(char currentState, std::string word, std::stack<c
 				}
 			}
 			else 
-				if (word.size() == 1)
+				if (new_word.size() == 1)
 			    {
-				    return 1;
+				    return 0;
 			    }
 			else
-				return 0;
+				return 1;
 		}
 	}
 	if (foundTransition == false)
