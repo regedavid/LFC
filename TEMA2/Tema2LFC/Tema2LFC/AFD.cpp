@@ -58,6 +58,31 @@ void AFD::makeAFD(AFN& afn)
 	}
 }
 
+bool AFD::checkWord(std::string word)
+{
+	std::pair<char, int> stareCurenta = { 'q',0 };
+	int stCurenta = 0;
+	for (auto& character : word) {
+		bool foundTransition = false;
+		for (auto& tranzitie : m_tranzitii) {
+			if (std::get<0>(tranzitie).second == stCurenta && std::get<1>(tranzitie) == character) {
+				foundTransition = true;
+				stCurenta = std::get<2>(tranzitie).second;
+				break;
+			}
+		}
+		if (!foundTransition) {
+			return false;
+		}
+	}
+	if (m_stariFinale.find({ 'q',stCurenta }) != m_stariFinale.end()) {
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
 std::ostream& operator<<(std::ostream& out, const AFD& finiteAutomaton)
 {
 	out << '(';

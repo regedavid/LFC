@@ -51,6 +51,8 @@ int main()
 			case 2:
 			{
 				std::cout << "Afisarea inteligibila a expresiei regulate din fisier este:" << std::endl;
+				std::cout << expresie;
+				std::cout << std::endl;
 				break;
 			}
 			case 3:
@@ -59,6 +61,14 @@ int main()
 				std::string word;
 				std::cout << "Cuvantul de verificat este: ";
 				std::cin >> word;
+				if (result2.checkWord(word)) {
+					std::cout << "Cuvantul este acceptat";
+					
+				}
+				else {
+					std::cout << "Cuvantul nu este acceptat";
+				}
+				std::cout << std::endl;
 				break;
 			}
 			case 4:
