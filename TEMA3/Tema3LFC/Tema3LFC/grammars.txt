@@ -38,3 +38,18 @@ a b
 S aSB
 S aB
 B b
+
+
+S
+5
+S A B C D
+3
+a b c
+7
+S aBCA
+C cDCB
+C cDBB
+A aA
+A a
+B b
+D c

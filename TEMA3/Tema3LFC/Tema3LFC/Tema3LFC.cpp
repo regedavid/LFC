@@ -64,19 +64,19 @@ void GrammarToPDAutomaton(Grammar& grammar, PDAutomaton& automaton) {
 int main()
 {
     Grammar grammar;
-    Grammar grammarFNG;
-    Grammar simplified;
     PDAutomaton pdautomaton;
     std::ifstream fin("text.txt");
     grammar.readGrammar(fin);
-    simplified = grammar;
-    /*grammarFNG = grammar;
-    grammarFNG.ChomskyNormalForm();
-    grammarFNG.GreibachNormalForm();*/
-    GrammarToPDAutomaton(grammar/*grammarFNG ar trebui*/, pdautomaton);
-    std::cout << pdautomaton << std::endl;
+
     if (grammar.verifyGrammar() && grammar.isIDC()) 
     {
+        Grammar simplified = grammar;
+        simplified.getSimplifiedGrammar();
+        Grammar grammarFNG = simplified;
+        grammarFNG.ChomskyNormalForm();
+        grammarFNG.GreibachNormalForm();
+        GrammarToPDAutomaton(grammarFNG, pdautomaton);
+
         std::cout << "The grammar is valid and IDC! :)" << std::endl<< std::endl;
         while (true) {
             std::cout << "1. Display grammar" << std::endl;
@@ -85,7 +85,8 @@ int main()
             std::cout << "4. Display grammar in FNG" << std::endl;
             std::cout << "5. Generate a word in grammar and verify if it is accepted in automaton" << std::endl;
             std::cout << "6. Verify if a input word is accepted by the automaton" << std::endl;
-            std::cout << "7. Exit" << std::endl;
+            std::cout << "7. Display Push-Down Automaton" << std::endl;
+            std::cout << "8. Exit" << std::endl;
 
             int choice;
             std::cin >> choice;
@@ -93,21 +94,18 @@ int main()
             switch (choice) {
             case 1:
                 std::cout << "You chose to display grammar:" << std::endl;
-                std::cout<<grammar;
+                std::cout << grammar;
                 break;
             case 2:
                 std::cout << "You chose to generate word in grammar:" << std::endl;
                 std::cout << "Generated word: " << grammar.generateWord() << std::endl;
                 break;
             case 3:
-                std::cout << "You chose to display simplified grammar:" << std::endl;
-                simplified.simplify1();
-                simplified.simplify2();
-                simplified.simplify3();
+                std::cout << "You chose to display simplified grammar:" << std::endl;                             
                 std::cout << simplified;
                 break;
             case 4:
-                std::cout << "You chose to display grammar in FNG:" << std::endl;
+                std::cout << "You chose to display grammar in FNG:" << std::endl;      
                 std::cout << grammarFNG;
                 break;
             case 5:
@@ -140,6 +138,9 @@ int main()
                 break;
             }
             case 7:
+                std::cout << pdautomaton;
+                break;
+            case 8:
                 return 0;
             default:
                 std::cout << "Invalid choice. Please try again." << std::endl;

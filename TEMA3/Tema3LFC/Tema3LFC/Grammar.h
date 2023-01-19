@@ -36,6 +36,7 @@ public:
 	//simplificare fara redenumiri
 	void simplify3();
 
+	void getSimplifiedGrammar();
 	void ChomskyNormalForm();
 	void GreibachNormalForm();
 

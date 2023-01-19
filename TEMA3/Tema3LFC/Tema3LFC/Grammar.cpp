@@ -230,7 +230,13 @@ void Grammar::simplify1()
 {
 	std::unordered_set<char> stari;
 	for (auto& it : m_productii) {
-		if (it.second.size() == 1) {
+		bool notInVT = false;
+		for (auto& character : it.second) {
+			if (m_terminale.find(character) == m_terminale.end()) {
+				notInVT = true;
+			}
+		}
+		if (!notInVT) {
 			if (m_terminale.find(it.second[0]) != m_terminale.end()) {
 				stari.insert(it.first[0]);
 			}
@@ -351,7 +357,7 @@ void Grammar::simplify3()
 		index2++;
 	}
 
-	for (int i = 0; i < redenumiri.size()-1; i++) {
+	for (int i = 0; i < redenumiri.size(); i++) {
 		for (int j = i+1; j < redenumiri.size(); j++) {
 			if (redenumiri[i].second == redenumiri[j].first) {
 				redenumiri.push_back(std::make_pair(redenumiri[i].first, redenumiri[j].second));
@@ -372,9 +378,16 @@ void Grammar::simplify3()
 	}
 }
 
+void Grammar::getSimplifiedGrammar()
+{
+	this->simplify1();
+	this->simplify2();
+	this->simplify3();
+}
+
 void Grammar::ChomskyNormalForm()
 {
-	char symbol = 'M';
+	char symbol = getMaxNeterminal() + 1;
 	std::vector<std::pair<std::string, std::string>> additions;
 	for (auto& terminal : m_terminale) {
 		bool added = false;
@@ -509,7 +522,8 @@ void Grammar::GreibachNormalForm()
 	}
 	//pas2
 	for (int index = 0; index < m_productii.size(); index++) {
-		if ((addedSymbols.find(m_productii[index].first[0]) != addedSymbols.end() || m_productii[index].first[0] == m_startSymbol) && m_terminale.find(m_productii[index].second[0]) == m_terminale.end()) {
+		//if ((addedSymbols.find(m_productii[index].first[0]) != addedSymbols.end() || m_productii[index].first[0] == m_startSymbol) && m_terminale.find(m_productii[index].second[0]) == m_terminale.end()) {
+		if (m_terminale.find(m_productii[index].second[0]) == m_terminale.end()) {
 			std::string substr = m_productii[index].second.substr(1, m_productii[index].second.size() - 1);
 			char changed = m_productii[index].second[0];
 			std::string left(1, m_productii[index].first[0]);
